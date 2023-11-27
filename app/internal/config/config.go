@@ -23,11 +23,11 @@ type Config struct {
 		}
 	}
 	PostgreSQL struct {
-		Password string `env:"PASSWORD" env-required:"true"`
-		Host     string `env:"HOST" env-required:"true"`
-		Part     string `env:"PART" env-required:"true"`
-		Database string `env:"DATABASE" env-required:"true"`
-		Username string `env:"USERNAME" env-required:"true"`
+		Password string `env:"PSQL_PASSWORD" env-required:"true"`
+		Host     string `env:"PSQL_HOST" env-required:"true"`
+		Part     string `env:"PSQL_PORT" env-required:"true"`
+		Database string `env:"PSQL_DATABASE" env-required:"true"`
+		Username string `env:"PSQL_USERNAME" env-required:"true"`
 	}
 }
 

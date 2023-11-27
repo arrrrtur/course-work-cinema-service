@@ -1,7 +1,8 @@
 package model
 
-type Cinema_hall struct {
-	id         string `json:"id"`
-	name       string `json:"name"`
-	seat_count string `json:"seat_Count"`
+type CinemaHall struct {
+	Name     string `json:"name"`
+	Capacity int    `json:"capacity"`
+	Class    string `json:"class"`
+	CinemaId int    `json:"cinema_id"`
 }

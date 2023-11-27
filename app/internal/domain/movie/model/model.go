@@ -1,10 +1,10 @@
 package model
 
 type Movie struct {
-	Id          string `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Director    string `json:"director"`
-	Duration    string `json:"duration"`
-	ReleaseYear string `json:"release_Year"`
+	Title       string             `json:"title,omitempty"`
+	Description string             `json:"description,omitempty"`
+	Duration    int                `json:"duration,omitempty"`
+	ReleaseYear string             `json:"release_year,omitempty"`
+	Director    string             `json:"director,omitempty"`
+	Rating      map[string]float32 `json:"rating,omitempty"`
 }

@@ -27,10 +27,10 @@ type App struct {
 }
 
 func NewApp(config *config.Config, logger *logging.Logger) (App, error) {
-	logger.Println("router initial")
+	logger.Info("router initial")
 	router := httprouter.New()
 
-	logger.Println("swagger doc initializing")
+	logger.Info("swagger doc initializing")
 	router.Handler(http.MethodGet, "/swagger", http.RedirectHandler("/swagger/index.html", http.StatusMovedPermanently))
 	router.Handler(http.MethodGet, "/swagger/*any", httpSwagger.WrapHandler)
 
@@ -106,5 +106,6 @@ func (a *App) startHttp() {
 		if err != nil {
 			a.logger.Fatal(err)
 		}
+
 	}
 }
