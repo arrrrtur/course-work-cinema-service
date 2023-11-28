@@ -3,22 +3,28 @@ package main
 import (
 	"Cinema/internal/app"
 	"Cinema/internal/config"
-	"Cinema/pkg/logging"
-	"log"
+	"Cinema/pkg/common/logging"
+	"context"
 )
 
 func main() {
-	log.Print("config initializing")
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	logging.L(ctx).Info("config initializing")
 	cfg := config.GetConfig()
 
-	log.Print("logger initializing")
-	logger := logging.GetLogger(cfg.AppConfig.LogLevel)
-
-	a, err := app.NewApp(cfg, &logger)
+	newApp, err := app.NewApp(ctx, cfg)
 	if err != nil {
-		log.Fatal(err)
+		logging.WithError(ctx, err).Fatal("app.NewApp")
 	}
 
-	a.Run()
+	logging.L(ctx).Info("Running application")
+
+	err = newApp.Run(ctx)
+	if err != nil {
+		logging.WithError(ctx, err).Fatal("app.Run")
+		return
+	}
 
 }

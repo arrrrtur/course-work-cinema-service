@@ -1,0 +1,39 @@
+---
+app:
+  is-debug: true
+  id: cinema-service
+  name: Cinema Service
+  log-level: trace
+  admin:
+    email: admin@bebe.baba
+    password: "123"
+
+postgresql:
+  host: localhost
+  port: "49155"
+  username: postgres
+  password: postgrespw
+  database: cinema
+  
+http:
+  ip: 127.0.0.1
+  port: 30001
+  writeTimeout: 15s
+  readTimeout: 15s
+  cors:
+    allowedMethods:
+      - "GET"
+      - "POST"
+      - "PATCH"
+      - "PUT"
+      - "OPTIONS"
+      - "DELETE"
+    allowedOrigins:
+      - "http://localhost:3000"
+    allowCredentials: true
+    allowedHeaders:
+      - Content-Type
+    optionsPassthrough: false
+    exposedHeaders:
+      - Content-Length
+    debug: false

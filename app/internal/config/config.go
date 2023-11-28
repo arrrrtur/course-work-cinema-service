@@ -1,46 +1,81 @@
 package config
 
 import (
+	"flag"
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
+	"os"
 	"sync"
+	"time"
 )
 
 type Config struct {
-	IsDebug       bool `env:"IS_DEBUG" env-default:"false"`
-	IsDevelopment bool `env:"IS_DEV" env=default:"false"`
-	Listen        struct {
-		Type       string `env:"LISTEN_TYPE" env-default:"port" env-description:"if 'sock'' then SOCKET_FILE is required"`
-		BindIP     string `env:"BIND_IP" env-default:"0.0.0.0"`
-		Port       string `env:"PORT" env-default:"10000"`
-		SocketFile string `env:"SOCKET_FILE" env-default:"app.sock"`
+	IsDebug       bool `env:"IS_DEBUG" yaml:"isDebug" env-default:"false"`
+	IsDevelopment bool `env:"IS_DEV" yaml:"isDevelopment" env=default:"false"`
+	HTTP          struct {
+		IP           string        `env:"BIND_IP" yaml:"IP" env-default:"127.0.0.2"`
+		Port         int           `env:"PORT" yaml:"port" env-default:"10000"`
+		ReadTimeout  time.Duration `env:"HTTP-READ-TIMEOUT" yaml:"readTimeout"`
+		WriteTimeout time.Duration `env:"HTTP-WRITE-TIMEOUT" yaml:"writeTimeout"`
+		CORS         struct {
+			AllowedMethods     []string `env:"HTTP-CORS-ALLOWED-METHODS" yaml:"allowedMethods"`
+			AllowedOrigins     []string `env:"HTTP-CORS-ALLOWED-ORIGINS" yaml:"allowedOrigins"`
+			AllowCredentials   bool     `env:"HTTP-CORS-ALLOWED-CREDENTIALS" yaml:"allowCredentials"`
+			AllowedHeaders     []string `env:"HTTP-CORS-ALLOWED-HEADERS" yaml:"allowedHeaders"`
+			OptionsPassthrough bool     `env:"HTTP-CORS-OPTIONS-PASSTHROUGH" yaml:"optionsPassthrough"`
+			ExposedHeaders     []string `env:"HTTP-CORS-EXPOSED-HEADERS" yaml:"exposedHeaders"`
+			Debug              bool     `env:"HTTP-CORS-DEBUG" yaml:"debug"`
+		} `yaml:"cors"`
 	}
 	AppConfig struct {
-		LogLevel  string `env:"LOG_LEVEL" env-default:"trace"`
+		LogLevel  string `env:"LOG_LEVEL" yaml:"logLevel" env-default:"trace"`
 		AdminUser struct {
-			Email    string `env:"ADMIN_EMAIL" env-default:"admin"`
-			Password string `env:"ADMIN_PWD" env-default:"admin"`
+			Email    string `env:"ADMIN_EMAIL" yaml:"email" env-default:"admin"`
+			Password string `env:"ADMIN_PWD" yaml:"password" env-default:"admin"`
 		}
 	}
 	PostgreSQL struct {
-		Password string `env:"PSQL_PASSWORD" env-required:"true"`
-		Host     string `env:"PSQL_HOST" env-required:"true"`
-		Part     string `env:"PSQL_PORT" env-required:"true"`
-		Database string `env:"PSQL_DATABASE" env-required:"true"`
-		Username string `env:"PSQL_USERNAME" env-required:"true"`
-	}
+		Password string `env:"PSQL_PASSWORD" yaml:"password"`
+		Host     string `env:"PSQL_HOST" yaml:"host"`
+		Port     string `env:"PSQL_PORT" yaml:"port"`
+		Database string `env:"PSQL_DATABASE" yaml:"database"`
+		Username string `env:"PSQL_USERNAME" yaml:"username"`
+	} `yaml:"postgresql"`
 }
 
+const (
+	EnvConfigPathName  = "CONFIG-PATH"
+	FlagConfigPathname = "config"
+)
+
+var configPath string
 var instance *Config
 var once sync.Once
 
 func GetConfig() *Config {
 	once.Do(func() {
-		log.Print("gather config")
+		flag.StringVar(
+			&configPath,
+			FlagConfigPathname,
+			"./config/config.yml",
+			"this is app config file",
+		)
+		flag.Parse()
+
+		log.Print("config init")
+
+		if configPath == "" {
+			configPath = os.Getenv(EnvConfigPathName)
+		}
+
+		if configPath == "" {
+			log.Fatal("config path is required")
+		}
 
 		instance = &Config{}
 
-		if err := cleanenv.ReadEnv(instance); err != nil {
+		if err := cleanenv.ReadConfig(configPath, instance); err != nil {
+			log.Printf("Error reading config: %v", err)
 			helpText := "Baryspiyev Artur - Monolith Cinema System"
 			help, _ := cleanenv.GetDescription(instance, &helpText)
 			log.Print(help)

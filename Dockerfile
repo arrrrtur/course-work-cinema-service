@@ -2,10 +2,10 @@
 FROM golang:1.17-alpine AS build
 
 # Установка рабочей директории
-WORKDIR /app
+WORKDIR /newApp
 
 # Копирование файлов проекта в контейнер
-COPY ./app ./
+COPY ./newApp ./
 
 # Сборка приложения
 RUN go build -o main .
@@ -14,10 +14,10 @@ RUN go build -o main .
 FROM alpine:latest
 
 # Установка рабочей директории
-WORKDIR /app
+WORKDIR /newApp
 
 # Копирование бинарного файла из образа сборки в текущий образ
-COPY --from=build /app/main .
+COPY --from=build /newApp/main .
 
 # Определение команды запуска приложения
 CMD ["./main"]
