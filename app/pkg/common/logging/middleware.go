@@ -3,7 +3,6 @@ package logging
 import (
 	"net/http"
 
-	"Cinema/pkg/tracing"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -21,7 +20,6 @@ func Middleware(next http.Handler) http.Handler {
 
 		if span := trace.SpanContextFromContext(ctx); span.HasTraceID() {
 			newLogger = newLogger.With(StringField(traceIDLogKey, span.TraceID().String()))
-			tracing.TraceVal(ctx, traceIDLogKey, span.TraceID().String())
 			newLogger = newLogger.With(StringField(spanIDLogKey, span.TraceID().String()))
 		}
 

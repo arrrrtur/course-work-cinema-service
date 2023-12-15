@@ -1,3 +1,5 @@
+// config.go
+
 package config
 
 import (
@@ -57,12 +59,14 @@ func GetConfig() *Config {
 		flag.StringVar(
 			&configPath,
 			FlagConfigPathname,
-			"./config/config.yml",
+			"./config/config.yaml",
 			"this is app config file",
 		)
 		flag.Parse()
 
 		log.Print("config init")
+		dir, _ := os.Getwd()
+		log.Printf("Current working directory: %s", dir)
 
 		if configPath == "" {
 			configPath = os.Getenv(EnvConfigPathName)

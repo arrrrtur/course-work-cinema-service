@@ -1,32 +1,36 @@
 package model
 
 type Cinema struct {
-	ID      int    `json:"id"`
+	ID      int    `json:"id, omitempty"`
 	Name    string `json:"name,omitempty"`
 	Address string `json:"address,omitempty"`
 }
 
 func NewCinema(
 	ID int,
-	name string,
-	address string,
+	Name string,
+	Address string,
 ) Cinema {
 	return Cinema{
 		ID:      ID,
-		Name:    name,
-		Address: address,
+		Name:    Name,
+		Address: Address,
 	}
 }
 
 type CreateCinema struct {
-	ID      int
-	Name    string
-	Address string
+	ID      int    `json:"-"`
+	Name    string `json:"name,omitempty"`
+	Address string `json:"address,omitempty"`
 }
 
-func NewCreateCinema(id int, name string, address string) CreateCinema {
+func NewCreateCinema(
+	ID int,
+	name string,
+	address string,
+) CreateCinema {
 	return CreateCinema{
-		ID:      id,
+		ID:      ID,
 		Name:    name,
 		Address: address,
 	}

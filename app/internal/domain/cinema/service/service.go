@@ -2,44 +2,49 @@ package service
 
 import (
 	"Cinema/internal/domain/cinema/model"
+	"Cinema/internal/domain/cinema/repository"
+	"Cinema/pkg/common/logging"
 	"context"
-	"github.com/pkg/errors"
 )
 
-type repository interface {
-	All(ctx context.Context) ([]model.Cinema, error)
-	Create(ctx context.Context, req model.CreateCinema) error
+type CinemaServiceInterface interface {
+	CreateCinema(ctx context.Context, req model.CreateCinema) error
+	GetAllCinemas(ctx context.Context) ([]model.Cinema, error)
+	GetCinemaByID(ctx context.Context, cinemaID int) (model.Cinema, error)
+	UpdateCinema(ctx context.Context, req model.Cinema) error
+	DeleteCinema(ctx context.Context, cinemaID int) error
 }
 
 type CinemaService struct {
-	repository repository
+	repository repository.CinemaRepositoryInterface
 }
 
-func NewCinemaService(repository repository) *CinemaService {
-	return &CinemaService{repository: repository}
-}
-
-func (s *CinemaService) All(ctx context.Context) ([]model.Cinema, error) {
-	cinemas, err := s.repository.All(ctx)
-	if err != nil {
-		return nil, errors.Wrap(err, "repository.All")
+func NewCinemaService(repo repository.CinemaRepositoryInterface) *CinemaService {
+	return &CinemaService{
+		repository: repo,
 	}
-
-	return cinemas, nil
 }
 
-func (s *CinemaService) CreateCinema(ctx context.Context, req model.CreateCinema) (model.Cinema, error) {
-	// Логика кэширования или другие дополнительные шаги после создания
+func (s *CinemaService) CreateCinema(ctx context.Context, req model.CreateCinema) error {
+	return s.repository.Create(ctx, req)
+}
 
-	err := s.repository.Create(ctx, req)
+func (s *CinemaService) GetAllCinemas(ctx context.Context) ([]model.Cinema, error) {
+	cinemas, err := s.repository.FindAll(ctx)
 	if err != nil {
-		return model.Cinema{}, err
+		logging.L(ctx).Error("aasdsad")
 	}
+	return cinemas, err
+}
 
-	return model.NewCinema(
-		req.ID,
-		req.Name,
-		req.Address,
-		// ... другие поля
-	), nil
+func (s *CinemaService) GetCinemaByID(ctx context.Context, cinemaID int) (model.Cinema, error) {
+	return s.repository.FindById(ctx, cinemaID)
+}
+
+func (s *CinemaService) UpdateCinema(ctx context.Context, req model.Cinema) error {
+	return s.repository.UpdateBy(ctx, req)
+}
+
+func (s *CinemaService) DeleteCinema(ctx context.Context, cinemaID int) error {
+	return s.repository.DeleteById(ctx, cinemaID)
 }

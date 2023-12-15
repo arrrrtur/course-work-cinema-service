@@ -1,1 +1,9 @@
-GET http://localhost:10000/api/heartbeat
+GET http://127.0.0.2:30001/api/cinema-halls/cinema/1
+
+###
+GET http://127.0.0.2:30001/api/cinema-hall/sessions/1
+
+###
+GET http://127.0.0.2:30001/api/movies/1
+
+###

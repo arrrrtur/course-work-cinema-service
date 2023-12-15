@@ -1,6 +1,64 @@
+definitions:
+  model.Cinema:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /api/cinemas:
+    get:
+      description: Get a list of all cinemas
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Cinema'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all cinemas
+      tags:
+      - cinemas
+    post:
+      consumes:
+      - application/json
+      description: Create a new cinema
+      parameters:
+      - description: Cinema object to be created
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.Cinema'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Cinema created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new cinema
+      tags:
+      - cinema
   /api/heartbeat:
     get:
       responses:

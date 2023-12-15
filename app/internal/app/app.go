@@ -1,8 +1,24 @@
+// app.go
+
 package app
 
 import (
 	_ "Cinema/docs"
 	"Cinema/internal/config"
+	"Cinema/internal/domain/cinema/repository"
+	"Cinema/internal/domain/cinema/service"
+	repository2 "Cinema/internal/domain/cinemaHall/repository"
+	service2 "Cinema/internal/domain/cinemaHall/service"
+	repository3 "Cinema/internal/domain/movie/repository"
+	service3 "Cinema/internal/domain/movie/service"
+	repository4 "Cinema/internal/domain/session/repository"
+	service4 "Cinema/internal/domain/session/service"
+	repository5 "Cinema/internal/domain/ticket/repository"
+	service5 "Cinema/internal/domain/ticket/service"
+	repository6 "Cinema/internal/domain/user/repository"
+	service6 "Cinema/internal/domain/user/service"
+	"Cinema/internal/handlers"
+	"Cinema/pkg/common/core/closer"
 	"Cinema/pkg/common/errors"
 	"Cinema/pkg/common/logging"
 	psql "Cinema/pkg/postgresql"
@@ -53,7 +69,60 @@ func NewApp(ctx context.Context, config *config.Config) (App, error) {
 		return App{}, errors.Wrap(err, "psql.NewClient")
 
 	}
-	defer pgClient.Close()
+	closer.AddN(pgClient)
+
+	logging.L(ctx).Info("initial services")
+	cinemaService := service.NewCinemaService(repository.NewCinemaRepository(pgClient))
+	hallService := service2.NewCinemaHallService(repository2.NewCinemaHallRepository(pgClient))
+	movieService := service3.NewMovieService(repository3.NewMovieRepository(pgClient))
+	sessionService := service4.NewSessionService(repository4.NewSessionRepository(pgClient))
+	ticketService := service5.NewTicketService(repository5.NewTicketRepository(pgClient))
+	userService := service6.NewUserService(repository6.NewUserRepository(pgClient))
+
+	logging.L(ctx).Info("initial handlers")
+	cinemaHandler := handlers.NewCinemaHandler(cinemaService)
+	movieHandler := handlers.NewMovieHandler(movieService)
+	ticketHandler := handlers.NewTicketHandler(ticketService)
+	userHandler := handlers.NewUserHandler(userService)
+	sessionHandler := handlers.NewSessionHandler(sessionService)
+	HallHandler := handlers.NewCinemaHallHandler(hallService)
+
+	logging.L(ctx).Info("initial routes")
+	router.POST("/api/cinemas", cinemaHandler.CreateCinema)
+	router.GET("/api/cinemas", cinemaHandler.GetAllCinemas)
+	router.GET("/api/cinemas/:id", cinemaHandler.GetCinemaByID)
+	router.PUT("/api/cinemas/:id", cinemaHandler.UpdateCinema)
+	router.DELETE("/api/cinemas/:id", cinemaHandler.DeleteCinema)
+
+	router.POST("/api/movies", movieHandler.CreateMovie)
+	router.GET("/api/movies", movieHandler.GetAllMovies)
+	router.GET("/api/movies/:id", movieHandler.GetMovieByID)
+	router.PUT("/api/movies/:id", movieHandler.UpdateMovie)
+	router.DELETE("/api/movies/:id", movieHandler.DeleteMovie)
+
+	router.POST("/api/tickets/buy", ticketHandler.CreateTicket)
+	router.GET("/api/tickets/:id", ticketHandler.GetTicketByID)
+	router.GET("/api/user/tickets/:userId", ticketHandler.GetTicketsByUserID)
+	router.PUT("/api/tickets/:id", ticketHandler.UpdateTicket)
+	router.DELETE("/api/tickets/:id", ticketHandler.DeleteTicket)
+
+	router.POST("/api/sessions", sessionHandler.CreateSession)
+	router.GET("/api/sessions/:id", sessionHandler.GetSessionByID)
+	router.GET("/api/cinema-hall/sessions/:cinemaHallId", sessionHandler.GetSessionsByCinemaHallID)
+	router.PUT("/api/sessions/:id", sessionHandler.UpdateSession)
+	router.DELETE("/api/sessions/:id", sessionHandler.DeleteSession)
+
+	router.POST("/api/users", userHandler.CreateUser)
+	router.GET("/api/users", userHandler.GetAllUsers)
+	router.GET("/api/users/:id", userHandler.GetUserByID)
+	router.PUT("/api/users/:id", userHandler.UpdateUser)
+	router.DELETE("/api/users/:id", userHandler.DeleteUser)
+
+	router.POST("/api/cinema-halls", HallHandler.CreateCinemaHall)
+	router.GET("/api/cinema-halls/cinema/:cinema_id", HallHandler.GetAllCinemaHalls)
+	//router.GET("/api/cinema-halls/:id", HallHandler.GetCinemaHallByID)
+	router.PUT("/api/cinema-halls/:id", HallHandler.UpdateCinemaHall)
+	router.DELETE("/api/cinema-halls/:id", HallHandler.DeleteCinemaHall)
 
 	return App{
 		cfg:    config,
@@ -90,7 +159,7 @@ func (app *App) startHttp(ctx context.Context) error {
 	c := cors.New(cors.Options{
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPatch, http.MethodPut,
 			http.MethodOptions, http.MethodDelete},
-		AllowedOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
+		AllowedOrigins:     []string{"*"},
 		AllowCredentials:   true,
 		AllowedHeaders:     []string{},
 		OptionsPassthrough: true,

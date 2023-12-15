@@ -1,7 +1,7 @@
--- Creating the "Cinema" database
+-- Очищаем всю базу данных
 DO $$
     DECLARE
-        current_table text;  -- Используйте более конкретное имя переменной, чтобы избежать неоднозначности
+        current_table text;
     BEGIN
         FOR current_table IN (SELECT table_name FROM information_schema.tables WHERE table_schema = 'public')
             LOOP
@@ -11,11 +11,12 @@ DO $$
 
 select * from information_schema.tables;
 
+-- Импортируем, если нет, тип данных hstore
 CREATE EXTENSION IF NOT EXISTS hstore;
 
 create table movie(
                       id serial primary key,
-                      title varchar(255) not null,
+                      title varchar(255) not null ,
                       description text,
                       duration int,
                       release_year int,
@@ -25,21 +26,21 @@ create table movie(
 
 create table cinema(
                        id serial primary key,
-                       name varchar(255) not null,
+                       "name" varchar(255) not null,
                        address varchar(255) not null
 );
 
 create table cinema_hall(
                             id serial primary key,
-                            name varchar(255) not null,
+                            "name" varchar(255) not null,
                             capacity int,
-                            class varchar(255),
+                            "class" varchar(255),
                             cinema_id int references cinema(id)
 );
 
 create table session(
                         id serial primary key,
-                        date date,
+                        "date" date,
                         movie_id int references movie(id),
                         cinema_hall_id int references cinema_hall(id),
                         ticket_left int
@@ -55,7 +56,6 @@ create table "user"(
 
 create table ticket(
                        id serial primary key,
-                       class varchar(255),
                        cost float,
                        seat int,
                        session_id int references session(id),
@@ -67,44 +67,59 @@ create table friend_list(
                             friend_id int references "user"(id)
 );
 
--- Fill "Cinema" Database
--- Заполнение таблицы cinema
+-- Вставка данных в таблицу cinema
 INSERT INTO cinema (name, address) VALUES
-                                       ('Cinema1', 'Address1'),
-                                       ('Cinema2', 'Address2'),
-                                       ('Cinema3', 'Address3');
+                                       ('Кинотеатр "Зеркальный Экран"', 'ул. Центральная, д. 456, Город Г'),
+                                       ('Арт-Кинотеатр "Творчество"', 'пр. Лесной, д. 789, Город Д'),
+                                       ('Императорский Кинопалац', 'ул. Звездная, д. 101, Город Е'),
+                                       ('Семейное КиноДейство', 'ул. Солнечная, д. 789, Город З'),
+                                       ('Луна-Парк Кинотеатр', 'пр. Парковый, д. 101, Город И'),
+                                       ('Гелиос Кинотеатр', 'ул. Луна, д. 456, Город К');
 
--- Заполнение таблицы cinema_hall
-INSERT INTO cinema_hall (name, capacity, class, cinema_id) VALUES
-                                                               ('Hall1', 100, 'Standard', 1),
-                                                               ('Hall2', 150, 'VIP', 2),
-                                                               ('Hall3', 120, 'Standard', 3);
-
--- Заполнение таблицы movie
+-- Вставка данных в таблицу movie
 INSERT INTO movie (title, description, duration, release_year, director, rating) VALUES
-                                                                                     ('Movie1', 'Description1', 120, 2020, 1, '"IMDb"=>"8.5", "RottenTomatoes"=>"90"'),
-                                                                                     ('Movie2', 'Description2', 110, 2021, 2, '"IMDb"=>"7.8", "RottenTomatoes"=>"85"'),
-                                                                                     ('Movie3', 'Description3', 130, 2019, 3, '"IMDb"=>"9.0", "RottenTomatoes"=>"95"');
+                                                                                     ('Тайны Вселенной: Загадки Галактики', 'Фантастическое путешествие в неизведанные уголки космоса', 140, 2022, 3, '"IMDb"=>"9.0", "Metacritic"=>"88"'),
+                                                                                     ('Следы Времени: Драма в Четырех Актах', 'Глубокая драма о течении времени и выборе', 110, 2021, 4, '"IMDb"=>"8.5", "Rotten Tomatoes"=>"87"'),
+                                                                                     ('Ловушка Судьбы: Игра на Выживание', 'Захватывающий триллер с неожиданными сюжетными поворотами', 125, 2023, 2, '"IMDb"=>"8.8", "Rotten Tomatoes"=>"90"'),
+                                                                                     ('По ту сторону горизонта', 'Романтическая история о поиске своего места в мире', 118, 2020, 5, '"IMDb"=>"8.7", "Metacritic"=>"85"'),
+                                                                                     ('Тень Великого Взрыва', 'Научно-фантастический боевик с элементами детектива', 132, 2022, 1, '"IMDb"=>"8.9", "Rotten Tomatoes"=>"92"'),
+                                                                                     ('Спасти Галактику: Последний Рубеж', 'Эпическое продолжение приключений в космосе', 150, 2023, 3, '"IMDb"=>"9.2", "Rotten Tomatoes"=>"94"');
 
--- Заполнение таблицы session
+-- Вставка данных в таблицу cinema_hall
+INSERT INTO cinema_hall (name, capacity, class, cinema_id) VALUES
+                                                               ('Зал 4', 80, 'Стандарт', 1),
+                                                               ('Зал 5', 120, 'VIP', 1),
+                                                               ('Зал 6', 90, 'Премиум', 1),
+                                                               ('Зал 7', 100, 'Стандарт', 4),
+                                                               ('Зал 8', 80, 'VIP', 5),
+                                                               ('Зал 9', 120, 'Премиум', 6);
+
+-- Вставка данных в таблицу session
 INSERT INTO session (date, movie_id, cinema_hall_id, ticket_left) VALUES
-                                                                      ('2023-01-01', 1, 1, 50),
-                                                                      ('2023-01-02', 2, 2, 75),
-                                                                      ('2023-01-03', 3, 3, 60);
+                                                                      ('2023-01-04 19:15:00', 1, 1, 40),
+                                                                      ('2023-01-05 21:00:00', 2, 2, 100),
+                                                                      ('2023-01-06 18:30:00', 3, 3, 70),
+                                                                      ('2023-01-07 20:30:00', 4, 1, 60),
+                                                                      ('2023-01-08 22:15:00', 5, 2, 75),
+                                                                      ('2023-01-09 17:45:00', 6, 1, 90);
 
--- Заполнение таблицы user
+-- Вставка данных в таблицу user
 INSERT INTO "user" (first_name, last_name, number, email) VALUES
-                                                              ('John', 'Doe', '123456789', 'john.doe@example.com'),
-                                                              ('Alice', 'Smith', '987654321', 'alice.smith@example.com');
+                                                              ('Ольга', 'Петрова', '456123789', 'olga.petrova@example.com'),
+                                                              ('Алексей', 'Кузнецов', '321987654', 'aleksey.kuznetsov@example.com'),
+                                                              ('Дмитрий', 'Иванов', '789456123', 'dmitriy.ivanov@example.com'),
+                                                              ('Мария', 'Смирнова', '654321987', 'maria.smirnova@example.com');
 
--- Заполнение таблицы ticket
-INSERT INTO ticket (class, cost, seat, session_id, user_id) VALUES
-                                                                ('Standard', 10.0, 1, 1, 1),
-                                                                ('VIP', 20.0, 2, 2, 2),
-                                                                ('Standard', 12.0, 3, 3, 1);
+-- Вставка данных в таблицу ticket
+INSERT INTO ticket (cost, seat, session_id, user_id) VALUES
+                                                         (11.2, 4, 1, 3),
+                                                         (13.5, 5, 2, 4),
+                                                         (10.0, 6, 3, 3),
+                                                         (12.0, 7, 4, 1),
+                                                         (14.5, 8, 5, 2),
+                                                         (11.8, 9, 6, 2);
 
--- Заполнение таблицы friend_list
+-- Вставка данных в таблицу friend_list
 INSERT INTO friend_list (user_id, friend_id) VALUES
-                                                 (1, 2),
-                                                 (2, 1);
-
+                                                 (3, 4),
+                                                 (4, 3);
