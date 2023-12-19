@@ -11,7 +11,7 @@ app:
 
 postgresql:
   host: localhost
-  port: "49153"
+  port: "49155"
   username: postgres
   password: postgrespw
   database: cinema

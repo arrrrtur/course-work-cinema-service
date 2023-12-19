@@ -91,13 +91,13 @@ func NewApp(ctx context.Context, config *config.Config) (App, error) {
 	router.POST("/api/cinemas", cinemaHandler.CreateCinema)
 	router.GET("/api/cinemas", cinemaHandler.GetAllCinemas)
 	router.GET("/api/cinemas/:id", cinemaHandler.GetCinemaByID)
-	router.PUT("/api/cinemas/:id", cinemaHandler.UpdateCinema)
+	router.PUT("/api/cinemas", cinemaHandler.UpdateCinema)
 	router.DELETE("/api/cinemas/:id", cinemaHandler.DeleteCinema)
 
 	router.POST("/api/movies", movieHandler.CreateMovie)
 	router.GET("/api/movies", movieHandler.GetAllMovies)
 	router.GET("/api/movies/:id", movieHandler.GetMovieByID)
-	router.PUT("/api/movies/:id", movieHandler.UpdateMovie)
+	router.PUT("/api/movies", movieHandler.UpdateMovie)
 	router.DELETE("/api/movies/:id", movieHandler.DeleteMovie)
 
 	router.POST("/api/tickets/buy", ticketHandler.CreateTicket)

@@ -7,3 +7,21 @@ GET http://127.0.0.2:30001/api/cinema-hall/sessions/1
 GET http://127.0.0.2:30001/api/movies/1
 
 ###
+GET http://127.0.0.2:30001/api/movies/1
+
+###
+PUT http://127.0.0.2:30001/api/movies
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Вселенной: Загадки Галактики",
+  "description": "Фантастическое путешествие в неизведанные уголки космоса",
+  "duration":140,
+  "release_year": 2000,
+  "director": 1,
+  "rating": {"imdb" :  "1", "sda":  "2"}
+}
+
+###
+GET http://127.0.0.2:30001/api/cinemas/1

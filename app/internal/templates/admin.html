@@ -8,39 +8,243 @@
 <body>
 <script src="scripts/header.js"></script>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Добавить кинотеатр
-</button>
+<div id="buttonGroups" class="w-50"
+>
+    <div id="cinema" class="btn-group my-2 w-100" role="group">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCinemaModal">
+            Добавить кинотеатр
+        </button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить кинотеатр</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addCinemaForm">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Название</label>
-                        <input type="text" class="form-control" id="name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Адрес</label>
-                        <input type="text" class="form-control" id="address">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitBtn">Добавить</button>
-            </div>
-        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditCinemaModal">
+            Изменить кинотеатр
+        </button>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DeleteCinemaModal">
+            Удалить кинотеатр
+        </button>
+
+    </div><br/>
+
+    <div id="movie" class="btn-group my-2 w-100" role="group">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddMovieModal">
+            Добавить фильм
+        </button>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditMovieModal">
+            Изменить фильм
+        </button>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DeleteMovieModal">
+            Удалить фильм
+        </button>
     </div>
 </div>
 
+<div id="modal forms">
+    <!-- Add cinema -->
+    <div class="modal fade" id="AddCinemaModal" tabindex="-1" aria-labelledby="AddCinemaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="AddCinemaModalLabel">Добавить кинотеатр</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="AddCinemaForm">
+                        <div class="mb-3">
+                            <label for="AddCinemaName" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="AddCinemaName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="AddCinemaAddress" class="form-label">Адрес</label>
+                            <input type="text" class="form-control" id="AddCinemaAddress">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="AddCinemaBtn">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    Edit cinema-->
+    <div class="modal fade" id="EditCinemaModal" tabindex="-1" aria-labelledby="EditCinemaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditCinemaModalLabel">Изменить кинотеатр</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="EditCinemaForm">
+                        <div class="mb-3">
+                            <label for="EditCinemaId" class="form-label">Название</label>
+                            <input type="number" class="form-control" id="EditCinemaId">
+                            <button type="button" id="CheckCinemaBtn"> Запросить</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditCinemaName" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="EditCinemaName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditCinemaAddress" class="form-label">Адрес</label>
+                            <input type="text" class="form-control" id="EditCinemaAddress">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="EditCinemaBtn">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    Delete cinema-->
+    <div class="modal fade" id="DeleteCinemaModal" tabindex="-1" aria-labelledby="DeleteCinemaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="DeleteCinemaModalLabel">Удалить кинотеатр</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="DeleteCinemaForm">
+                        <div class="mb-3">
+                            <label for="DeleteCinemaId" class="form-label">Id</label>
+                            <input type="number" class="form-control" id="DeleteCinemaId">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="DeleteCinemaSubmitBtn">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--    Add movie-->
+    <div class="modal fade" id="AddMovieModal" tabindex="-1" aria-labelledby="AddMovieModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="AddMovieModalLabel">Добавить фильм</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="AddMovieForm">
+                        <div class="mb-3">
+                            <label for="AddMovieTitle" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="AddMovieTitle">
+                        </div>
+                        <div class="mb-3">
+                            <label for="AddMovieDescription" class="form-label">Описание</label>
+                            <input type="text" class="form-control" id="AddMovieDescription">
+                        </div>
+                        <div class="mb-3">
+                            <label for="AddMovieDuration" class="form-label">Длительность</label>
+                            <input type="number" class="form-control" id="AddMovieDuration">
+                        </div>
+                        <div class="mb-3">
+                            <label for="AddMovieReleaseYear" class="form-label">Дата выхода</label>
+                            <input type="number" class="form-control" id="AddMovieReleaseYear">
+                        </div>
+                        <div class="mb-3">
+                            <label for="AddMovieDirector" class="form-label">Режисер</label>
+                            <input type="text" class="form-control" id="AddMovieDirector">
+                        </div>
+                        <div class="mb-3">
+                            <label for="AddMovieRating" class="form-label">Рейтинг</label>
+                            <input type="text" class="form-control" id="AddMovieRating" placeholder="imdb => 5, sda => 2,">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="AddMovieBtn">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    Edit movie-->
+    <div class="modal fade" id="EditMovieModal" tabindex="-1" aria-labelledby="EditMovieModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditMovieModalLabel">Изменить фильм</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="EditMovieForm">
+                        <div class="mb-3">
+                            <label for="EditMovieId" class="form-label">Id</label>
+                            <input type="number" class="form-control" id="EditMovieId">
+                            <button type="button" id="CheckMovieBtn"> Запросить</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditMovieTitle" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="EditMovieTitle">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditMovieDescription" class="form-label">Описание</label>
+                            <input type="text" class="form-control" id="EditMovieDescription">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditMovieDuration" class="form-label">Длительность</label>
+                            <input type="number" class="form-control" id="EditMovieDuration">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditMovieReleaseYear" class="form-label">Дата выхода</label>
+                            <input type="number" class="form-control" id="EditMovieReleaseYear">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditMovieDirector" class="form-label">Режисер</label>
+                            <input type="text" class="form-control" id="EditMovieDirector">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EditMovieRating" class="form-label">Рейтинг</label>
+                            <input type="text" class="form-control" id="EditMovieRating">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="EditMovieBtn">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    Delete movie-->
+    <div class="modal fade" id="DeleteMovieModal" tabindex="-1" aria-labelledby="DeleteMovieModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="DeleteMovieModalLabel">Удалить фильм</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="DeleteMovieForm">
+                        <div class="mb-3">
+                            <label for="DeleteMovieId" class="form-label">Id</label>
+                            <input type="number" class="form-control" id="DeleteMovieId">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="DeleteMovieSubmitBtn">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 <script src="scripts/admin.js"></script>
 
 <script src="scripts/footer.js"></script>

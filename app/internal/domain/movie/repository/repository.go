@@ -155,7 +155,13 @@ func (repository *MovieRepository) UpdateMovie(ctx context.Context, req model.Mo
 				"duration":     req.Duration,
 				"release_year": req.ReleaseYear,
 				"director":     req.Director,
-				"rating":       req.Rating,
+				"rating": func(rating map[string]string) string {
+					var hstore string
+					for k, v := range rating {
+						hstore += fmt.Sprintf(" \"%s\" => %s,", k, v)
+					}
+					return hstore
+				}(req.Rating),
 			}).
 		Where(squirrel.Eq{"id": req.ID})
 
