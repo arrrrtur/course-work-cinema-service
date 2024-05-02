@@ -17,4 +17,4 @@ COPY tools/wait-for-it.sh wait-for-it.sh
 
 RUN chmod 777 wait-for-it.sh
 
-CMD ["cinema"]
+CMD ["course-work-cinema-service"]
