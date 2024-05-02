@@ -29,21 +29,17 @@ func (service *CinemaHallService) GetCinemaHallByID(ctx context.Context, hallID 
 }
 
 func (service *CinemaHallService) CreateCinemaHall(ctx context.Context, req model.CreateCinemaHall) error {
-	// Возможны дополнительные проверки перед созданием
 	return service.repository.CreateCinemaHall(ctx, req)
 }
 
 func (service *CinemaHallService) GetAllCinemaHalls(ctx context.Context, cinemaID int) ([]model.CinemaHall, error) {
-	// Возможны дополнительные проверки перед получением
 	return service.repository.GetAllCinemaHalls(ctx, cinemaID)
 }
 
 func (service *CinemaHallService) UpdateCinemaHall(ctx context.Context, req model.CinemaHall) error {
-	// Возможны дополнительные проверки перед обновлением
 	return service.repository.UpdateCinemaHall(ctx, req)
 }
 
 func (service *CinemaHallService) DeleteCinemaHall(ctx context.Context, hallID int) error {
-	// Возможны дополнительные проверки перед удалением
 	return service.repository.DeleteCinemaHall(ctx, hallID)
 }

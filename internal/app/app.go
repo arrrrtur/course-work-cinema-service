@@ -5,18 +5,18 @@ package app
 import (
 	_ "Cinema/docs"
 	"Cinema/internal/config"
-	"Cinema/internal/domain/cinema/repository"
-	"Cinema/internal/domain/cinema/service"
-	repository2 "Cinema/internal/domain/cinemaHall/repository"
-	service2 "Cinema/internal/domain/cinemaHall/service"
-	repository3 "Cinema/internal/domain/movie/repository"
-	service3 "Cinema/internal/domain/movie/service"
-	repository4 "Cinema/internal/domain/session/repository"
-	service4 "Cinema/internal/domain/session/service"
-	repository5 "Cinema/internal/domain/ticket/repository"
-	service5 "Cinema/internal/domain/ticket/service"
-	repository6 "Cinema/internal/domain/user/repository"
-	service6 "Cinema/internal/domain/user/service"
+	cinemarepository "Cinema/internal/domain/cinema/repository"
+	cinemaservice "Cinema/internal/domain/cinema/service"
+	cinemaHallrepository "Cinema/internal/domain/cinemaHall/repository"
+	cinemaHallservice "Cinema/internal/domain/cinemaHall/service"
+	movierepository "Cinema/internal/domain/movie/repository"
+	movieservice "Cinema/internal/domain/movie/service"
+	sessionrepository "Cinema/internal/domain/session/repository"
+	sessionservice "Cinema/internal/domain/session/service"
+	ticketrepository "Cinema/internal/domain/ticket/repository"
+	ticketservice "Cinema/internal/domain/ticket/service"
+	userrepository "Cinema/internal/domain/user/repository"
+	userservice "Cinema/internal/domain/user/service"
 	"Cinema/internal/handlers"
 	"Cinema/pkg/common/core/closer"
 	"Cinema/pkg/common/errors"
@@ -71,13 +71,21 @@ func NewApp(ctx context.Context, config *config.Config) (App, error) {
 	}
 	closer.AddN(pgClient)
 
+	logging.L(ctx).Info("initial repositories")
+	cinemaRepository := cinemarepository.NewCinemaRepository(pgClient)
+	cinemaHallRepository := cinemaHallrepository.NewCinemaHallRepository(pgClient)
+	movieRepository := movierepository.NewMovieRepository(pgClient)
+	sessionRepository := sessionrepository.NewSessionRepository(pgClient)
+	ticketRepository := ticketrepository.NewTicketRepository(pgClient)
+	userRepository := userrepository.NewUserRepository(pgClient)
+
 	logging.L(ctx).Info("initial services")
-	cinemaService := service.NewCinemaService(repository.NewCinemaRepository(pgClient))
-	hallService := service2.NewCinemaHallService(repository2.NewCinemaHallRepository(pgClient))
-	movieService := service3.NewMovieService(repository3.NewMovieRepository(pgClient))
-	sessionService := service4.NewSessionService(repository4.NewSessionRepository(pgClient))
-	ticketService := service5.NewTicketService(repository5.NewTicketRepository(pgClient))
-	userService := service6.NewUserService(repository6.NewUserRepository(pgClient))
+	cinemaService := cinemaservice.NewCinemaService(cinemaRepository)
+	hallService := cinemaHallservice.NewCinemaHallService(cinemaHallRepository)
+	movieService := movieservice.NewMovieService(movieRepository)
+	sessionService := sessionservice.NewSessionService(sessionRepository)
+	ticketService := ticketservice.NewTicketService(ticketRepository)
+	userService := userservice.NewUserService(userRepository)
 
 	logging.L(ctx).Info("initial handlers")
 	cinemaHandler := handlers.NewCinemaHandler(cinemaService)
@@ -120,7 +128,7 @@ func NewApp(ctx context.Context, config *config.Config) (App, error) {
 
 	router.POST("/api/cinema-halls", HallHandler.CreateCinemaHall)
 	router.GET("/api/cinema-halls/cinema/:cinema_id", HallHandler.GetAllCinemaHalls)
-	//router.GET("/api/cinema-halls/:id", HallHandler.GetCinemaHallByID)
+	router.GET("/api/cinema-halls/:id", HallHandler.GetCinemaHallByID)
 	router.PUT("/api/cinema-halls/:id", HallHandler.UpdateCinemaHall)
 	router.DELETE("/api/cinema-halls/:id", HallHandler.DeleteCinemaHall)
 
