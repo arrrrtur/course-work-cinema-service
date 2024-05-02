@@ -156,6 +156,7 @@ func (app *App) startHttp(ctx context.Context) error {
 		logging.BoolField("Debug", app.cfg.HTTP.CORS.Debug),
 	).Info("CORS initializing")
 
+	// TODO: fix
 	c := cors.New(cors.Options{
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPatch, http.MethodPut,
 			http.MethodOptions, http.MethodDelete},
